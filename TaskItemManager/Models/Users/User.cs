@@ -8,6 +8,22 @@ public class User
     private User() { }
 
     private User(
+        Guid id,
+        string userName,
+        string email,
+        string passwordHash,
+        DateTime createdAt,
+        List<TaskItem> taskItems)
+    {
+        Id = id;
+        UserName = userName;
+        Email = email;
+        PasswordHash = passwordHash;
+        CreatedAt = createdAt;
+        _taskItems = taskItems;
+    }
+
+    private User(
         string userName,
         string email,
         string passwordHash)
@@ -33,6 +49,23 @@ public class User
             dto.UserName,
             dto.Email,
             dto.PasswordHash);
+    }
+
+    public static User Create(
+        Guid id,
+        string userName,
+        string email,
+        string passwordHash,
+        DateTime createdAt,
+        List<TaskItem> taskItems)
+    {
+        return new User(
+            id,
+            userName,
+            email,
+            passwordHash,
+            createdAt,
+            taskItems);
     }
 
     public void Update(UpdateUserDto dto)

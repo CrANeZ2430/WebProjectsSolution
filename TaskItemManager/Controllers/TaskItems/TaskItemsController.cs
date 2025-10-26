@@ -25,6 +25,7 @@ namespace TaskItemManager.Controllers.TaskItems
                 x.Title,
                 x.Description,
                 x.IsCompleted,
+                x.User == null ? null :
                 new UserDto(
                     x.User.Id,
                     x.User.UserName,

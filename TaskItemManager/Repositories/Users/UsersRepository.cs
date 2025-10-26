@@ -1,25 +1,86 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Dapper;
+using Microsoft.EntityFrameworkCore;
+using Npgsql;
 using TaskItemManager.Database;
+using TaskItemManager.Models.TaskItems;
 using TaskItemManager.Models.Users;
 
 namespace TaskItemManager.Repositories.Users;
 
-public class UsersRepository(TaskItemsDbContext dbContext) : IUsersRepository
+public class UsersRepository(TaskItemsDbContext dbContext, IConfiguration configuration) : IUsersRepository
 {
     public async Task<List<User>> GetUsers(CancellationToken cancellationToken = default)
     {
-        return await dbContext.Users
-            .Include(x => x.TaskItems)
-            .AsNoTracking()
-            .ToListAsync(cancellationToken);
+        //return await dbContext.Users
+        //    .Include(x => x.TaskItems)
+        //    .AsNoTracking()
+        //    .ToListAsync(cancellationToken);
+
+        using var connection = new NpgsqlConnection(configuration.GetConnectionString("TaskItemsDb"));
+
+        var userDictionary = new Dictionary<Guid, User>();
+        var sqlQuery = @"select * from ""taskItems"".""Users"" u 
+                    left join ""taskItems"".""TaskItems"" t 
+                    on t.""UserId"" = u.""Id"" 
+                    order by u.""Id""";
+
+        var users = await connection.QueryAsync<User, TaskItem, User>(
+            sqlQuery,
+            (user, taskItem) =>
+            {
+                if (!userDictionary.TryGetValue(user.Id, out var userEntry))
+                {
+                    userEntry = User.Create(
+                        user.Id,
+                        user.UserName,
+                        user.Email,
+                        user.PasswordHash,
+                        user.CreatedAt,
+                        user.TaskItems.ToList());
+                    userDictionary.Add(user.Id, userEntry);
+                }
+
+                if (taskItem != null)
+                    userEntry.TaskItems.Add(taskItem);
+
+                return userEntry;
+            });
+
+        return userDictionary.Values.ToList();
     }
 
-    public async Task<User> GetUserById(Guid UserId, CancellationToken cancellationToken = default)
+    public async Task<User> GetUserById(Guid userId, CancellationToken cancellationToken = default)
     {
-        return await dbContext.Users
-            .Include(x => x.TaskItems)
-            .AsNoTracking()
-            .SingleOrDefaultAsync(x => x.Id == UserId);
+        //return await dbContext.Users
+        //    .Include(x => x.TaskItems)
+        //    .AsNoTracking()
+        //    .SingleOrDefaultAsync(x => x.Id == userId);
+
+        using var connection = new NpgsqlConnection(configuration.GetConnectionString("TaskItemsDb")); 
+        User returnUser = null; 
+        var sqlQuery = $@"select * from ""taskItems"".""Users"" u 
+                        left join ""taskItems"".""TaskItems"" t 
+                        on t.""UserId"" = u.""Id"" where u.""Id"" = @UserId 
+                        order by u.""Id"""; 
+        var userQuery = await connection.QueryAsync<User, TaskItem, User>(
+            sqlQuery, 
+            (user, taskItem) => 
+        { 
+            if (returnUser is null)
+            {
+                if (taskItem is not null)
+                    user.TaskItems.Add(taskItem);
+                returnUser = user;
+            }
+            
+            else 
+                returnUser.TaskItems.Add(taskItem);
+
+            return user; 
+        },
+        new { UserId = userId }); 
+
+        return returnUser;
     }
 
     public async Task AddUser(User user, CancellationToken cancellationToken = default)
