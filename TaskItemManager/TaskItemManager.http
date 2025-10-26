@@ -1,0 +1,16 @@
+@TaskItemManager_HostAddress = https://localhost:7153
+
+GET {{TaskItemManager_HostAddress}}/api/taskitems
+
+###
+
+POST {{TaskItemManager_HostAddress}}/api/taskitems
+Content-Type: application/json
+
+{
+  "title": "Go shit",
+  "description": "Go to the toilet",
+  "isCompleted": true
+}
+
+###
