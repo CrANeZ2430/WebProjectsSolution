@@ -6,4 +6,5 @@ public record UserDto(
     string Email,
     string PasswordHash,
     DateTime CreatedAt,
-    IEnumerable<TaskItemDto> Posts);
+    IEnumerable<TaskItemDto> Posts,
+    int PostCount);

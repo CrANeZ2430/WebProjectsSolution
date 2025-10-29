@@ -56,12 +56,14 @@ public class UsersRepository(TaskItemsDbContext dbContext, IConfiguration config
         //    .AsNoTracking()
         //    .SingleOrDefaultAsync(x => x.Id == userId);
 
-        using var connection = new NpgsqlConnection(configuration.GetConnectionString("TaskItemsDb")); 
+        using var connection = new NpgsqlConnection(configuration.GetConnectionString("TaskItemsDb"));
+
         User returnUser = null; 
         var sqlQuery = $@"select * from ""taskItems"".""Users"" u 
                         left join ""taskItems"".""TaskItems"" t 
                         on t.""UserId"" = u.""Id"" where u.""Id"" = @UserId 
-                        order by u.""Id"""; 
+                        order by u.""Id""";
+
         var userQuery = await connection.QueryAsync<User, TaskItem, User>(
             sqlQuery, 
             (user, taskItem) => 

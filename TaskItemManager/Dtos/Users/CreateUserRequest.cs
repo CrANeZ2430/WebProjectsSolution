@@ -1,6 +1,6 @@
 ﻿namespace TaskItemManager.Dtos.Users;
 
-public record UpdateUserDto(
+public record CreateUserRequest(
     string UserName,
     string Email,
     string PasswordHash);

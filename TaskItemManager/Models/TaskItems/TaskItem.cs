@@ -44,7 +44,7 @@ public class TaskItem
     public Guid UserId { get; private set; }
     public User User { get; private set; }
 
-    public static TaskItem Create(CreateTaskItemDto dto)
+    public static TaskItem Create(CreateTaskItemRequest dto)
     {
         return new TaskItem(
             Guid.NewGuid(),
@@ -71,7 +71,7 @@ public class TaskItem
             user);
     }
 
-    public void Update(UpdateTaskItemDto dto)
+    public void Update(UpdateTaskItemRequest dto)
     {
         Title = dto.Title;
         Description = dto.Description;

@@ -5,6 +5,7 @@ using AppUser = TaskItemManager.Models.Users.User;
 using TaskItemManager.Repositories.UnitOfWork;
 using TaskItemManager.Repositories.Users;
 using TaskItemManager.Controllers.Users.Dtos;
+using TaskItemManager.Controllers.Dtos;
 
 namespace TaskItemManager.Controllers.Users
 {
@@ -20,19 +21,22 @@ namespace TaskItemManager.Controllers.Users
             CancellationToken cancellationToken = default)
         {
             var users = await usersRepository.GetUsers(cancellationToken);
-            var userDtos = users.Select(x => new UserDto(
-                x.Id,
-                x.UserName,
-                x.Email,
-                x.PasswordHash,
-                x.CreatedAt,
-                x.TaskItems.Select(x => new TaskItemDto(
-                    x.Id,
-                    x.Title,
-                    x.Description,
-                    x.IsCompleted))));
+            var userDtos = users.Select(u => new UserDto(
+                u.Id,
+                u.UserName,
+                u.Email,
+                u.PasswordHash,
+                u.CreatedAt,
+                u.TaskItems.Select(t => new TaskItemDto(
+                    t.Id,
+                    t.Title,
+                    t.Description,
+                    t.IsCompleted)),
+                u.TaskItems.Count()));
 
-            return Ok(userDtos);
+            return Ok(new PageResponse<IEnumerable<UserDto>>(
+                userDtos.Count(),
+                userDtos));
         }
 
         [HttpGet("{userId}")]
@@ -47,18 +51,19 @@ namespace TaskItemManager.Controllers.Users
                 user.Email,
                 user.PasswordHash,
                 user.CreatedAt,
-                user.TaskItems.Select(x => new TaskItemDto(
-                    x.Id,
-                    x.Title,
-                    x.Description,
-                    x.IsCompleted)));
+                user.TaskItems.Select(t => new TaskItemDto(
+                    t.Id,
+                    t.Title,
+                    t.Description,
+                    t.IsCompleted)),
+                user.TaskItems.Count());
 
             return Ok(userDto);
         }
 
         [HttpPost]
         public async Task<IActionResult> AddUser(
-            [FromBody] CreateUserDto query,
+            [FromBody] CreateUserRequest query,
             CancellationToken cancellationToken = default)
         {
             var user = AppUser.Create(query);
@@ -71,7 +76,7 @@ namespace TaskItemManager.Controllers.Users
         [HttpPut("{userId}")]
         public async Task<IActionResult> UpdateUser(
             [FromRoute] Guid userId,
-            [FromBody] UpdateUserDto query,
+            [FromBody] UpdateUserRequest query,
             CancellationToken cancellationToken = default)
         {
             var user = await usersRepository.GetUserById(userId, cancellationToken);

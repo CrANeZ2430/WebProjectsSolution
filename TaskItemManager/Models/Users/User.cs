@@ -43,7 +43,7 @@ public class User
     public DateTime CreatedAt { get; private set; }
     public ICollection<TaskItem> TaskItems => _taskItems;
 
-    public static User Create(CreateUserDto dto)
+    public static User Create(CreateUserRequest dto)
     {
         return new User(
             dto.UserName,
@@ -68,7 +68,7 @@ public class User
             taskItems);
     }
 
-    public void Update(UpdateUserDto dto)
+    public void Update(UpdateUserRequest dto)
     {
         UserName = dto.UserName;
         Email = dto.Email;

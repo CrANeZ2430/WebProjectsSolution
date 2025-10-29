@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using TaskItemManager.Controllers.Dtos;
 using TaskItemManager.Controllers.TaskItems.Dtos;
 using TaskItemManager.Dtos.TaskItems;
 using TaskItemManager.Models.TaskItems;
@@ -20,20 +21,22 @@ namespace TaskItemManager.Controllers.TaskItems
             CancellationToken cancellationToken = default)
         {
             var taskItems = await taskItemsRepository.GetTaskItems(cancellationToken);
-            var taskItemDtos = taskItems.Select(x => new TaskItemDto(
-                x.Id,
-                x.Title,
-                x.Description,
-                x.IsCompleted,
-                x.User == null ? null :
+            var taskItemDtos = taskItems.Select(t => new TaskItemDto(
+                t.Id,
+                t.Title,
+                t.Description,
+                t.IsCompleted,
+                t.User == null ? null :
                 new UserDto(
-                    x.User.Id,
-                    x.User.UserName,
-                    x.User.Email,
-                    x.User.PasswordHash,
-                    x.User.CreatedAt)));
+                    t.User.Id,
+                    t.User.UserName,
+                    t.User.Email,
+                    t.User.PasswordHash,
+                    t.User.CreatedAt)));
 
-            return Ok(taskItemDtos);
+            return Ok(new PageResponse<IEnumerable<TaskItemDto>>(
+                taskItemDtos.Count(), 
+                taskItemDtos));
         }
 
         [HttpGet("{taskItemId}")]
@@ -59,7 +62,7 @@ namespace TaskItemManager.Controllers.TaskItems
 
         [HttpPost]
         public async Task<IActionResult> CreateTaskItem(
-            [FromBody] CreateTaskItemDto query,
+            [FromBody] CreateTaskItemRequest query,
             CancellationToken cancellationToken = default)
         {
             var taskItem = TaskItem.Create(query);
@@ -72,7 +75,7 @@ namespace TaskItemManager.Controllers.TaskItems
         [HttpPut("{taskItemId}")]
         public async Task<IActionResult> UpdateTaskItem(
             [FromRoute] Guid taskItemId,
-            [FromBody] UpdateTaskItemDto query,
+            [FromBody] UpdateTaskItemRequest query,
             CancellationToken cancellationToken = default)
         {
             var taskItem = await taskItemsRepository.GetTaskItemById(taskItemId, cancellationToken);
@@ -101,7 +104,7 @@ namespace TaskItemManager.Controllers.TaskItems
             CancellationToken cancellationToken = default)
         {
             var taskItem = await taskItemsRepository.GetTaskItemById(taskItemId);
-            taskItem.Update(new UpdateTaskItemDto(
+            taskItem.Update(new UpdateTaskItemRequest(
                 taskItem.Title,
                 taskItem.Description,
                 true));
