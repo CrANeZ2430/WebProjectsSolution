@@ -1,4 +1,4 @@
-﻿namespace TaskItemManager.Dtos.TaskItems
+﻿namespace TaskItemManager.Requests.TaskItems
 {
     public record UpdateTaskItemRequest(
         string Title,

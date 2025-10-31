@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using TaskItemManager.Models.Users;
+using TaskItemManager.Models.Users.Models;
 
 namespace TaskItemManager.Database.EntityTypeConfigurations;
 

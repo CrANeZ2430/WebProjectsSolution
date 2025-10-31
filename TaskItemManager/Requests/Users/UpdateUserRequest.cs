@@ -1,4 +1,4 @@
-﻿namespace TaskItemManager.Dtos.Users;
+﻿namespace TaskItemManager.Requests.Users;
 
 public record UpdateUserRequest(
     string UserName,

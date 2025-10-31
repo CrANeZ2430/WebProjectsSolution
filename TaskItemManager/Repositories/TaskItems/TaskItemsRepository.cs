@@ -1,9 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using TaskItemManager.Database;
-using TaskItemManager.Models.TaskItems;
 using Dapper;
 using Npgsql;
-using TaskItemManager.Models.Users;
+using TaskItemManager.Models.TaskItems.Models;
+using TaskItemManager.Models.Users.Models;
 
 namespace TaskItemManager.Repositories.TaskItems
 {

@@ -1,4 +1,4 @@
-﻿using TaskItemManager.Models.TaskItems;
+﻿using TaskItemManager.Models.TaskItems.Models;
 
 namespace TaskItemManager.Repositories.TaskItems
 {

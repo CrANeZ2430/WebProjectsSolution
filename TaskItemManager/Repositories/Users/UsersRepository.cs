@@ -2,8 +2,8 @@
 using Microsoft.EntityFrameworkCore;
 using Npgsql;
 using TaskItemManager.Database;
-using TaskItemManager.Models.TaskItems;
-using TaskItemManager.Models.Users;
+using TaskItemManager.Models.TaskItems.Models;
+using TaskItemManager.Models.Users.Models;
 
 namespace TaskItemManager.Repositories.Users;
 
@@ -83,6 +83,16 @@ public class UsersRepository(TaskItemsDbContext dbContext, IConfiguration config
         new { UserId = userId }); 
 
         return returnUser;
+    }
+
+    public async Task<bool> UserExists(Guid userId, CancellationToken cancellationToken = default)
+    {
+        using var connection = new NpgsqlConnection(configuration.GetConnectionString("TaskItemsDb"));
+        var sqlQuery = $@"select 1 from ""taskItems"".""Users"" u 
+                        where u.""Id"" = @UserId
+                        limit 1";
+
+        return await connection.ExecuteScalarAsync<bool>(sqlQuery, new { UserId = userId });
     }
 
     public async Task AddUser(User user, CancellationToken cancellationToken = default)

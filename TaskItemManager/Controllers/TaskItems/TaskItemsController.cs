@@ -2,10 +2,11 @@
 using Microsoft.AspNetCore.Mvc;
 using TaskItemManager.Controllers.Dtos;
 using TaskItemManager.Controllers.TaskItems.Dtos;
-using TaskItemManager.Dtos.TaskItems;
-using TaskItemManager.Models.TaskItems;
+using TaskItemManager.Requests.TaskItems;
+using TaskItemManager.Models.TaskItems.Models;
 using TaskItemManager.Repositories.TaskItems;
 using TaskItemManager.Repositories.UnitOfWork;
+using TaskItemManager.Repositories.Users;
 
 namespace TaskItemManager.Controllers.TaskItems
 {
@@ -13,6 +14,7 @@ namespace TaskItemManager.Controllers.TaskItems
     [ApiController]
     public class TaskItemsController(
         ITaskItemsRepository taskItemsRepository,
+        IUsersRepository usersRepository,
         IUnitOfWorkRepository unitOfWorkRepository)
         : ControllerBase
     {
@@ -65,7 +67,7 @@ namespace TaskItemManager.Controllers.TaskItems
             [FromBody] CreateTaskItemRequest query,
             CancellationToken cancellationToken = default)
         {
-            var taskItem = TaskItem.Create(query);
+            var taskItem = await TaskItem.Create(query, usersRepository, cancellationToken);
             await taskItemsRepository.AddTaskItem(taskItem, cancellationToken);
             await unitOfWorkRepository.SaveChangesAsync(cancellationToken);
 
@@ -79,7 +81,7 @@ namespace TaskItemManager.Controllers.TaskItems
             CancellationToken cancellationToken = default)
         {
             var taskItem = await taskItemsRepository.GetTaskItemById(taskItemId, cancellationToken);
-            taskItem.Update(query);
+            await taskItem.Update(query, cancellationToken);
             taskItemsRepository.UpdateTaskItem(taskItem);
             await unitOfWorkRepository.SaveChangesAsync(cancellationToken);
 

@@ -1,7 +1,11 @@
-﻿using TaskItemManager.Dtos.Users;
-using TaskItemManager.Models.TaskItems;
+﻿using FluentValidation;
+using System.ComponentModel.DataAnnotations;
+using System.Threading;
+using TaskItemManager.Models.TaskItems.Models;
+using TaskItemManager.Models.Users.Validation;
+using TaskItemManager.Requests.Users;
 
-namespace TaskItemManager.Models.Users;
+namespace TaskItemManager.Models.Users.Models;
 
 public class User
 {
@@ -43,12 +47,17 @@ public class User
     public DateTime CreatedAt { get; private set; }
     public ICollection<TaskItem> TaskItems => _taskItems;
 
-    public static User Create(CreateUserRequest dto)
+    public static async Task<User> Create(
+        CreateUserRequest request, 
+        CancellationToken cancellationToken = default)
     {
+        var validator = new CreateUserRequestValidator();
+        await validator.ValidateAndThrowAsync(request, cancellationToken);
+
         return new User(
-            dto.UserName,
-            dto.Email,
-            dto.PasswordHash);
+            request.UserName,
+            request.Email,
+            request.PasswordHash);
     }
 
     public static User Create(
@@ -68,10 +77,15 @@ public class User
             taskItems);
     }
 
-    public void Update(UpdateUserRequest dto)
+    public async Task Update(
+        UpdateUserRequest request,
+        CancellationToken cancellationToken = default)
     {
-        UserName = dto.UserName;
-        Email = dto.Email;
-        PasswordHash = dto.PasswordHash;
+        var validator = new UpdateUserRequestValidator();
+        await validator.ValidateAndThrowAsync(request, cancellationToken);
+
+        UserName = request.UserName;
+        Email = request.Email;
+        PasswordHash = request.PasswordHash;
     }
 }

@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using TaskItemManager.Dtos.Users;
-using AppUser = TaskItemManager.Models.Users.User;
+using TaskItemManager.Requests.Users;
+using AppUser = TaskItemManager.Models.Users.Models.User;
 using TaskItemManager.Repositories.UnitOfWork;
 using TaskItemManager.Repositories.Users;
 using TaskItemManager.Controllers.Users.Dtos;
@@ -66,7 +66,7 @@ namespace TaskItemManager.Controllers.Users
             [FromBody] CreateUserRequest query,
             CancellationToken cancellationToken = default)
         {
-            var user = AppUser.Create(query);
+            var user = await AppUser.Create(query, cancellationToken);
             await usersRepository.AddUser(user, cancellationToken);
             await unitOfWorkRepository.SaveChangesAsync(cancellationToken);
 
@@ -80,7 +80,7 @@ namespace TaskItemManager.Controllers.Users
             CancellationToken cancellationToken = default)
         {
             var user = await usersRepository.GetUserById(userId, cancellationToken);
-            user.Update(query);
+            await user.Update(query, cancellationToken);
             usersRepository.UpdateUser(user);
             await unitOfWorkRepository.SaveChangesAsync(cancellationToken);
 

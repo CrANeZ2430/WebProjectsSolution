@@ -1,7 +1,14 @@
-﻿using TaskItemManager.Dtos.TaskItems;
-using TaskItemManager.Models.Users;
+﻿using FluentValidation;
+using FluentValidation.Results;
+using System.ComponentModel.DataAnnotations;
+using System.Threading;
+using System.Threading.Tasks;
+using TaskItemManager.Models.TaskItems.Validation;
+using TaskItemManager.Models.Users.Models;
+using TaskItemManager.Repositories.Users;
+using TaskItemManager.Requests.TaskItems;
 
-namespace TaskItemManager.Models.TaskItems;
+namespace TaskItemManager.Models.TaskItems.Models;
 
 public class TaskItem
 {
@@ -44,14 +51,20 @@ public class TaskItem
     public Guid UserId { get; private set; }
     public User User { get; private set; }
 
-    public static TaskItem Create(CreateTaskItemRequest dto)
+    public static async Task<TaskItem> Create(
+        CreateTaskItemRequest request,
+        IUsersRepository usersRepository,
+        CancellationToken cancellationToken = default)
     {
+        var validator = new CreateTaskItemRequestValidator(usersRepository);
+        await validator.ValidateAndThrowAsync(request, cancellationToken);
+
         return new TaskItem(
             Guid.NewGuid(),
-            dto.Title,
-            dto.Description,
-            dto.IsCompleted,
-            dto.UserId);
+            request.Title,
+            request.Description,
+            request.IsCompleted,
+            request.UserId);
     }
 
     public static TaskItem Create(
@@ -71,10 +84,15 @@ public class TaskItem
             user);
     }
 
-    public void Update(UpdateTaskItemRequest dto)
+    public async Task Update(
+        UpdateTaskItemRequest request, 
+        CancellationToken cancellationToken = default)
     {
-        Title = dto.Title;
-        Description = dto.Description;
-        IsCompleted = dto.IsCompleted;
+        var validator = new UpdateTaskItemRequestValidator();
+        await validator.ValidateAndThrowAsync(request, cancellationToken);
+
+        Title = request.Title;
+        Description = request.Description;
+        IsCompleted = request.IsCompleted;
     }
 }

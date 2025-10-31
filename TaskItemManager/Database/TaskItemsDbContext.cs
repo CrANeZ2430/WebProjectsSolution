@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using TaskItemManager.Models.TaskItems;
-using TaskItemManager.Models.Users;
+using TaskItemManager.Models.TaskItems.Models;
+using TaskItemManager.Models.Users.Models;
 
 namespace TaskItemManager.Database
 {
