@@ -28,13 +28,12 @@ namespace TaskItemManager.Controllers.TaskItems
                 t.Title,
                 t.Description,
                 t.IsCompleted,
-                t.User == null ? null :
                 new UserDto(
                     t.User.Id,
                     t.User.UserName,
                     t.User.Email,
                     t.User.PasswordHash,
-                    t.User.CreatedAt)));
+                    t.User.CreatedAt) ?? null));
 
             return Ok(new PageResponse<IEnumerable<TaskItemDto>>(
                 taskItemDtos.Count(), 
@@ -106,7 +105,7 @@ namespace TaskItemManager.Controllers.TaskItems
             CancellationToken cancellationToken = default)
         {
             var taskItem = await taskItemsRepository.GetTaskItemById(taskItemId);
-            taskItem.Update(new UpdateTaskItemRequest(
+            await taskItem.Update(new UpdateTaskItemRequest(
                 taskItem.Title,
                 taskItem.Description,
                 true));

@@ -4,6 +4,7 @@ using Dapper;
 using Npgsql;
 using TaskItemManager.Models.TaskItems.Models;
 using TaskItemManager.Models.Users.Models;
+using TaskItemManager.ExceptionHandling.Exceptions;
 
 namespace TaskItemManager.Repositories.TaskItems
 {
@@ -59,7 +60,7 @@ namespace TaskItemManager.Repositories.TaskItems
             },
             new { TaskItemId = taskItemId });
 
-            return taskItems.SingleOrDefault();
+            return taskItems.SingleOrDefault() ?? throw new NotFoundException($"{nameof(TaskItem)} cannot be found");
         }
 
         public async Task AddTaskItem(TaskItem taskItem, CancellationToken cancellationToken = default)

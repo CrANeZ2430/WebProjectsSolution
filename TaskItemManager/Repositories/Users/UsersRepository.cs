@@ -4,6 +4,7 @@ using Npgsql;
 using TaskItemManager.Database;
 using TaskItemManager.Models.TaskItems.Models;
 using TaskItemManager.Models.Users.Models;
+using TaskItemManager.ExceptionHandling.Exceptions;
 
 namespace TaskItemManager.Repositories.Users;
 
@@ -18,7 +19,7 @@ public class UsersRepository(TaskItemsDbContext dbContext, IConfiguration config
 
         using var connection = new NpgsqlConnection(configuration.GetConnectionString("TaskItemsDb"));
 
-        var userDictionary = new Dictionary<Guid, User>();
+        var usersDictionary = new Dictionary<Guid, User>();
         var sqlQuery = @"select * from ""taskItems"".""Users"" u 
                     left join ""taskItems"".""TaskItems"" t 
                     on t.""UserId"" = u.""Id"" 
@@ -28,7 +29,7 @@ public class UsersRepository(TaskItemsDbContext dbContext, IConfiguration config
             sqlQuery,
             (user, taskItem) =>
             {
-                if (!userDictionary.TryGetValue(user.Id, out var userEntry))
+                if (!usersDictionary.TryGetValue(user.Id, out var userEntry))
                 {
                     userEntry = User.Create(
                         user.Id,
@@ -37,7 +38,7 @@ public class UsersRepository(TaskItemsDbContext dbContext, IConfiguration config
                         user.PasswordHash,
                         user.CreatedAt,
                         user.TaskItems.ToList());
-                    userDictionary.Add(user.Id, userEntry);
+                    usersDictionary.Add(user.Id, userEntry);
                 }
 
                 if (taskItem != null)
@@ -46,7 +47,7 @@ public class UsersRepository(TaskItemsDbContext dbContext, IConfiguration config
                 return userEntry;
             });
 
-        return userDictionary.Values.ToList();
+        return usersDictionary.Values.ToList();
     }
 
     public async Task<User> GetUserById(Guid userId, CancellationToken cancellationToken = default)
@@ -80,9 +81,9 @@ public class UsersRepository(TaskItemsDbContext dbContext, IConfiguration config
 
             return user; 
         },
-        new { UserId = userId }); 
+        new { UserId = userId });
 
-        return returnUser;
+        return returnUser ?? throw new NotFoundException($"{nameof(User)} cannot found");
     }
 
     public async Task<bool> UserExists(Guid userId, CancellationToken cancellationToken = default)

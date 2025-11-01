@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc.ApplicationModels;
 using Microsoft.EntityFrameworkCore;
 using TaskItemManager.Conventions;
 using TaskItemManager.Database;
+using TaskItemManager.ExceptionHandling;
 using TaskItemManager.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -15,6 +16,8 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 // Register custom services
+builder.Services.RegisterExceptionHandling();
+
 builder.Services.RegisterRepositories();
 builder.Services.AddDbContext<TaskItemsDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("TaskItemsDb")));
@@ -27,6 +30,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseExceptionHandler();
 
 app.UseHttpsRedirection();
 

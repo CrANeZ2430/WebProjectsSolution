@@ -1,16 +1,17 @@
 @TaskItemManager_HostAddress = https://localhost:7153
 
-GET {{TaskItemManager_HostAddress}}/api/taskitems
+GET {{TaskItemManager_HostAddress}}/api/task-items
 
 ###
 
-POST {{TaskItemManager_HostAddress}}/api/taskitems
+POST {{TaskItemManager_HostAddress}}/api/task-items
 Content-Type: application/json
 
 {
   "title": "Go shit",
   "description": "Go to the toilet",
-  "isCompleted": true
+  "isCompleted": true,
+  "userId" : "97e3cf89-3016-4f66-9184-5b04f7ea6c6a"
 }
 
 ###
