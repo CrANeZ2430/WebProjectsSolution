@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Diagnostics;
-using FluentValidation;
 using TaskItemManager.ExceptionHandling.Mapper;
 
 namespace TaskItemManager.ExceptionHandling.Handlers;

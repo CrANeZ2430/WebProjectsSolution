@@ -36,7 +36,6 @@ public class ExceptionMapper : IExceptionMapper
                 statusCode = 404;
                 title = "Resource cannot be found";
                 break;
-            case InternalServerErrorException:
             default:
                 statusCode = 500;
                 title = "Internal server problem";

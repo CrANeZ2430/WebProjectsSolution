@@ -6,6 +6,7 @@ using TaskItemManager.Repositories.UnitOfWork;
 using TaskItemManager.Repositories.Users;
 using TaskItemManager.Controllers.Users.Dtos;
 using TaskItemManager.Controllers.Dtos;
+using Microsoft.AspNetCore.Authorization;
 
 namespace TaskItemManager.Controllers.Users
 {
@@ -16,7 +17,11 @@ namespace TaskItemManager.Controllers.Users
         IUnitOfWorkRepository unitOfWorkRepository) 
         : ControllerBase
     {
+        [Authorize]
         [HttpGet]
+        [ProducesResponseType(typeof(PageResponse<IEnumerable<UserDto>>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> GetUsers(
             CancellationToken cancellationToken = default)
         {
@@ -27,7 +32,7 @@ namespace TaskItemManager.Controllers.Users
                 u.Email,
                 u.PasswordHash,
                 u.CreatedAt,
-                u.TaskItems.Select(t => new TaskItemDto(
+                u.TaskItems.Select(t => new TaskItemSummaryDto(
                     t.Id,
                     t.Title,
                     t.Description,
@@ -39,7 +44,11 @@ namespace TaskItemManager.Controllers.Users
                 userDtos));
         }
 
+        [Authorize]
         [HttpGet("{userId}")]
+        [ProducesResponseType(typeof(UserDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> GetUserById(
             [FromRoute] Guid userId,
             CancellationToken cancellationToken = default)
@@ -51,7 +60,7 @@ namespace TaskItemManager.Controllers.Users
                 user.Email,
                 user.PasswordHash,
                 user.CreatedAt,
-                user.TaskItems.Select(t => new TaskItemDto(
+                user.TaskItems.Select(t => new TaskItemSummaryDto(
                     t.Id,
                     t.Title,
                     t.Description,
@@ -61,8 +70,12 @@ namespace TaskItemManager.Controllers.Users
             return Ok(userDto);
         }
 
+        [Authorize]
         [HttpPost]
-        public async Task<IActionResult> AddUser(
+        [ProducesResponseType(typeof(UserCreatedResponse), StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        public async Task<IActionResult> CreateUser(
             [FromBody] CreateUserRequest query,
             CancellationToken cancellationToken = default)
         {
@@ -70,10 +83,22 @@ namespace TaskItemManager.Controllers.Users
             await usersRepository.AddUser(user, cancellationToken);
             await unitOfWorkRepository.SaveChangesAsync(cancellationToken);
 
-            return Ok();
+            return CreatedAtAction(
+                nameof(CreateUser), 
+                new { id = user.Id }, 
+                new UserCreatedResponse(
+                    user.Id,
+                    user.UserName,
+                    user.Email,
+                    user.PasswordHash,
+                    user.CreatedAt));
         }
 
+        [Authorize]
         [HttpPut("{userId}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> UpdateUser(
             [FromRoute] Guid userId,
             [FromBody] UpdateUserRequest query,
@@ -84,10 +109,14 @@ namespace TaskItemManager.Controllers.Users
             usersRepository.UpdateUser(user);
             await unitOfWorkRepository.SaveChangesAsync(cancellationToken);
 
-            return Ok();
+            return NoContent();
         }
 
+        [Authorize]
         [HttpDelete("{userId}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> DeleteUser(
             [FromRoute] Guid userId,
             CancellationToken cancellationToken = default)
@@ -96,7 +125,7 @@ namespace TaskItemManager.Controllers.Users
             usersRepository.DeleteUser(user);
             await unitOfWorkRepository.SaveChangesAsync(cancellationToken);
 
-            return Ok();
+            return NoContent();
         }
     }
 }

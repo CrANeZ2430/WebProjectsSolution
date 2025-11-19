@@ -1,10 +1,8 @@
 ﻿namespace TaskItemManager.Controllers.Users.Dtos;
 
-public record UserDto(
+public record UserCreatedResponse(
     Guid Id,
     string UserName,
     string Email,
     string PasswordHash,
-    DateTime CreatedAt,
-    IEnumerable<TaskItemSummaryDto> TaskItems,
-    int TaskItemCount);
+    DateTime CreatedAt);

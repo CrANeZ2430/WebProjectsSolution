@@ -1,12 +1,13 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using TaskItemManager.Controllers.Dtos;
 using TaskItemManager.Controllers.TaskItems.Dtos;
-using TaskItemManager.Requests.TaskItems;
 using TaskItemManager.Models.TaskItems.Models;
 using TaskItemManager.Repositories.TaskItems;
 using TaskItemManager.Repositories.UnitOfWork;
 using TaskItemManager.Repositories.Users;
+using TaskItemManager.Requests.TaskItems;
 
 namespace TaskItemManager.Controllers.TaskItems
 {
@@ -18,7 +19,11 @@ namespace TaskItemManager.Controllers.TaskItems
         IUnitOfWorkRepository unitOfWorkRepository)
         : ControllerBase
     {
+        [Authorize]
         [HttpGet]
+        [ProducesResponseType(typeof(PageResponse<IEnumerable<TaskItemDto>>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> GetTaskItems(
             CancellationToken cancellationToken = default)
         {
@@ -28,7 +33,7 @@ namespace TaskItemManager.Controllers.TaskItems
                 t.Title,
                 t.Description,
                 t.IsCompleted,
-                new UserDto(
+                new UserSummaryDto(
                     t.User.Id,
                     t.User.UserName,
                     t.User.Email,
@@ -40,7 +45,11 @@ namespace TaskItemManager.Controllers.TaskItems
                 taskItemDtos));
         }
 
+        [Authorize]
         [HttpGet("{taskItemId}")]
+        [ProducesResponseType(typeof(TaskItemDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> GetTaskItem(
             [FromRoute] Guid taskItemId,
             CancellationToken cancellationToken = default)
@@ -51,7 +60,7 @@ namespace TaskItemManager.Controllers.TaskItems
                 taskItem.Title,
                 taskItem.Description,
                 taskItem.IsCompleted,
-                new UserDto(
+                new UserSummaryDto(
                     taskItem.User.Id,
                     taskItem.User.UserName,
                     taskItem.User.Email,
@@ -61,7 +70,11 @@ namespace TaskItemManager.Controllers.TaskItems
             return Ok(taskItemDto);
         }
 
+        [Authorize]
         [HttpPost]
+        [ProducesResponseType(typeof(TaskItemCreatedResponse), StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> CreateTaskItem(
             [FromBody] CreateTaskItemRequest query,
             CancellationToken cancellationToken = default)
@@ -70,10 +83,22 @@ namespace TaskItemManager.Controllers.TaskItems
             await taskItemsRepository.AddTaskItem(taskItem, cancellationToken);
             await unitOfWorkRepository.SaveChangesAsync(cancellationToken);
 
-            return Ok();
+            return CreatedAtAction(
+                nameof(CreateTaskItem), 
+                new { id = taskItem.Id }, 
+                new TaskItemCreatedResponse(
+                    taskItem.Id,
+                    taskItem.Title,
+                    taskItem.Description,
+                    taskItem.IsCompleted,
+                    taskItem.UserId));
         }
 
+        [Authorize]
         [HttpPut("{taskItemId}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> UpdateTaskItem(
             [FromRoute] Guid taskItemId,
             [FromBody] UpdateTaskItemRequest query,
@@ -84,22 +109,14 @@ namespace TaskItemManager.Controllers.TaskItems
             taskItemsRepository.UpdateTaskItem(taskItem);
             await unitOfWorkRepository.SaveChangesAsync(cancellationToken);
 
-            return Ok();
+            return NoContent();
         }
 
-        [HttpDelete("{taskItemId}")]
-        public async Task<IActionResult> DeleteTaskItem(
-            [FromRoute] Guid taskItemId,
-            CancellationToken cancellationToken = default)
-        {
-            var taskItem = await taskItemsRepository.GetTaskItemById(taskItemId, cancellationToken);
-            taskItemsRepository.DeleteTaskItem(taskItem);
-            await unitOfWorkRepository.SaveChangesAsync(cancellationToken);
-
-            return Ok();
-        }
-
+        [Authorize]
         [HttpPatch("{taskItemId}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> CompleteTaskItem(
             [FromRoute] Guid taskItemId,
             CancellationToken cancellationToken = default)
@@ -112,7 +129,23 @@ namespace TaskItemManager.Controllers.TaskItems
             taskItemsRepository.UpdateTaskItem(taskItem);
             await unitOfWorkRepository.SaveChangesAsync(cancellationToken);
 
-            return Ok();
+            return NoContent();
+        }
+
+        [Authorize]
+        [HttpDelete("{taskItemId}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        public async Task<IActionResult> DeleteTaskItem(
+            [FromRoute] Guid taskItemId,
+            CancellationToken cancellationToken = default)
+        {
+            var taskItem = await taskItemsRepository.GetTaskItemById(taskItemId, cancellationToken);
+            taskItemsRepository.DeleteTaskItem(taskItem);
+            await unitOfWorkRepository.SaveChangesAsync(cancellationToken);
+
+            return NoContent();
         }
     }
 }

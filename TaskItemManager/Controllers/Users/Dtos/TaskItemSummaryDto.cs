@@ -1,6 +1,6 @@
 ﻿namespace TaskItemManager.Controllers.Users.Dtos;
 
-public record TaskItemDto(
+public record TaskItemSummaryDto(
     Guid Id,
     string Title,
     string Description,

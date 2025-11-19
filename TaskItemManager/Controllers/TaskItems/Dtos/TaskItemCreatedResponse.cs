@@ -1,8 +1,8 @@
 ﻿namespace TaskItemManager.Controllers.TaskItems.Dtos;
 
-public record TaskItemDto(
+public record TaskItemCreatedResponse(
     Guid Id,
     string Title,
     string Description,
     bool IsCompleted,
-    UserSummaryDto user);
+    Guid UserId);
