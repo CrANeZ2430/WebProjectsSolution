@@ -28,6 +28,10 @@ public class ExceptionMapper : IExceptionMapper
                 statusCode = 400;
                 title = "Error caused by request";
                 break;
+            case UnauthorizedException:
+                statusCode = 401;
+                title = "Unauthorized access";
+                break;
             case NotFoundException:
                 statusCode = 404;
                 title = "Resource cannot be found";

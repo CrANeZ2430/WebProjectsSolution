@@ -5,7 +5,7 @@ using Microsoft.OpenApi.Models;
 using TaskItemManager.Conventions;
 using TaskItemManager.Database;
 using TaskItemManager.ExceptionHandling;
-//using TaskItemManager.ExceptionHandling.Exceptions;
+using TaskItemManager.ExceptionHandling.Exceptions;
 using TaskItemManager.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -55,14 +55,14 @@ builder.Services.AddAuthentication(options =>
 {
     options.Authority = builder.Configuration["Auth0:Domain"];
     options.Audience = builder.Configuration["Auth0:Audience"];
-    //options.Events = new JwtBearerEvents
-    //{
-    //    OnChallenge = context =>
-    //    {
-    //        context.HandleResponse();
-    //        throw new UnauthorizedException("Token is missing or invalid");
-    //    }
-    //};
+    options.Events = new JwtBearerEvents
+    {
+        OnChallenge = context =>
+        {
+            context.HandleResponse();
+            throw new UnauthorizedException("Token is missing or invalid");
+        }
+    };
 });
 builder.Services.AddAuthorization();
 
