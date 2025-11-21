@@ -21,9 +21,9 @@ namespace TaskItemManager.Controllers.TaskItems
     {
         [Authorize]
         [HttpGet]
-        [ProducesResponseType(typeof(PageResponse<IEnumerable<TaskItemDto>>), StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        //[ProducesResponseType(typeof(PageResponse<IEnumerable<TaskItemDto>>), StatusCodes.Status200OK)]
+        //[ProducesResponseType(StatusCodes.Status400BadRequest)]
+        //[ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> GetTaskItems(
             CancellationToken cancellationToken = default)
         {
@@ -47,9 +47,9 @@ namespace TaskItemManager.Controllers.TaskItems
 
         [Authorize]
         [HttpGet("{taskItemId}")]
-        [ProducesResponseType(typeof(TaskItemDto), StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        //[ProducesResponseType(typeof(TaskItemDto), StatusCodes.Status200OK)]
+        //[ProducesResponseType(StatusCodes.Status400BadRequest)]
+        //[ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> GetTaskItem(
             [FromRoute] Guid taskItemId,
             CancellationToken cancellationToken = default)
@@ -72,9 +72,9 @@ namespace TaskItemManager.Controllers.TaskItems
 
         [Authorize]
         [HttpPost]
-        [ProducesResponseType(typeof(TaskItemCreatedResponse), StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        //[ProducesResponseType(typeof(TaskItemCreatedResponse), StatusCodes.Status201Created)]
+        //[ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
+        //[ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> CreateTaskItem(
             [FromBody] CreateTaskItemRequest query,
             CancellationToken cancellationToken = default)
@@ -96,9 +96,9 @@ namespace TaskItemManager.Controllers.TaskItems
 
         [Authorize]
         [HttpPut("{taskItemId}")]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        //[ProducesResponseType(StatusCodes.Status204NoContent)]
+        //[ProducesResponseType(StatusCodes.Status400BadRequest)]
+        //[ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> UpdateTaskItem(
             [FromRoute] Guid taskItemId,
             [FromBody] UpdateTaskItemRequest query,
@@ -114,9 +114,9 @@ namespace TaskItemManager.Controllers.TaskItems
 
         [Authorize]
         [HttpPatch("{taskItemId}")]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        //[ProducesResponseType(StatusCodes.Status204NoContent)]
+        //[ProducesResponseType(StatusCodes.Status400BadRequest)]
+        //[ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> CompleteTaskItem(
             [FromRoute] Guid taskItemId,
             CancellationToken cancellationToken = default)
@@ -134,9 +134,9 @@ namespace TaskItemManager.Controllers.TaskItems
 
         [Authorize]
         [HttpDelete("{taskItemId}")]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        //[ProducesResponseType(StatusCodes.Status204NoContent)]
+        //[ProducesResponseType(StatusCodes.Status400BadRequest)]
+        //[ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> DeleteTaskItem(
             [FromRoute] Guid taskItemId,
             CancellationToken cancellationToken = default)

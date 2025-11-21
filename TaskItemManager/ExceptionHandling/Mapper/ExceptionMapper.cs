@@ -28,10 +28,6 @@ public class ExceptionMapper : IExceptionMapper
                 statusCode = 400;
                 title = "Error caused by request";
                 break;
-            case ForbiddenException:
-                statusCode = 403;
-                title = "Cannot access resource";
-                break;
             case NotFoundException:
                 statusCode = 404;
                 title = "Resource cannot be found";

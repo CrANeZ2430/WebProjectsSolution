@@ -19,15 +19,21 @@ public class CustomExceptionHandler(
 
         var problemDetails = mapper.MapException(httpContext, exception);
 
-        //await httpContext.Response
-        //    .WriteAsJsonAsync(problemDetails, cancellationToken);
-
-        return await problemDetailService.TryWriteAsync(
+        try
+        {
+            await problemDetailService.WriteAsync(
             new ProblemDetailsContext
             {
                 HttpContext = httpContext,
                 Exception = exception,
                 ProblemDetails = problemDetails
             });
+        }
+        catch (Exception e)
+        {
+            logger.LogError(e.Message);
+        }
+
+        return true;
     }
 }

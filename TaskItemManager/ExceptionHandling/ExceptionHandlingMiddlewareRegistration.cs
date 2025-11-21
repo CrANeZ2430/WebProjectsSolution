@@ -23,13 +23,11 @@ public static class ExceptionHandlingMiddlewareRegistration
                 Activity? activity = context.HttpContext.Features.Get<IHttpActivityFeature>()?.Activity;
                 context.ProblemDetails.Extensions.TryAdd("traceId", activity?.Id);
 
-
-                if (context.Exception.StackTrace is not null)
-                    context.ProblemDetails.Extensions.Add(
-                        "stackTrace",
-                        context.Exception.StackTrace
+                context.ProblemDetails.Extensions.Add(
+                    "stackTrace",
+                    context.Exception.StackTrace
                         .Split(
-                            new[] { "\r\n", "\n" },
+                            ["\r\n", "\n"],
                             StringSplitOptions.TrimEntries));
             };
         });
