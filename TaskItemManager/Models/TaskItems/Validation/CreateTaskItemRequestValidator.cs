@@ -27,16 +27,18 @@ public class CreateTaskItemRequestValidator : AbstractValidator<CreateTaskItemRe
                 {
                     return startedAt > DateTime.UtcNow;
                 })
-            .WithMessage(t => $"{nameof(t.StartedAt)} cannot be further than now");
+            .WithMessage(t => $"{nameof(t.StartedAt)} cannot be earlier than now");
 
         RuleFor(t => t.DoneAt)
             .NotEmpty()
             .WithMessage(t => $"{nameof(t.DoneAt)} cannot be empty")
-            .Must(startedAt =>
+            .GreaterThan(t => t.StartedAt)
+            .WithMessage(t => $"{nameof(t.DoneAt)} shall be greater than {nameof(t.StartedAt)}")
+            .Must(doneAt =>
             {
-                return startedAt > DateTime.UtcNow;
+                return doneAt > DateTime.UtcNow;
             })
-            .WithMessage(t => $"{nameof(t.DoneAt)} cannot be further than now");
+            .WithMessage(t => $"{nameof(t.DoneAt)} cannot be earlier than now");
 
         RuleFor(t => t.UserId)
             .MustAsync(async (userId, cancellationToken) =>
