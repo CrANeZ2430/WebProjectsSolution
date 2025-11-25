@@ -18,10 +18,6 @@ public class UserEntityTypeConfiguration : IEntityTypeConfiguration<User>
             .IsRequired()
             .HasMaxLength(50);
 
-        builder.Property(x => x.PasswordHash)
-            .IsRequired()
-            .HasMaxLength(30);
-
         builder.Property(x => x.CreatedAt);
 
         builder.HasMany(u => u.TaskItems)

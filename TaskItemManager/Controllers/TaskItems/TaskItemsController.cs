@@ -37,7 +37,6 @@ namespace TaskItemManager.Controllers.TaskItems
                     t.User.Id,
                     t.User.UserName,
                     t.User.Email,
-                    t.User.PasswordHash,
                     t.User.CreatedAt) ?? null));
 
             return Ok(new PageResponse<IEnumerable<TaskItemDto>>(
@@ -64,7 +63,6 @@ namespace TaskItemManager.Controllers.TaskItems
                     taskItem.User.Id,
                     taskItem.User.UserName,
                     taskItem.User.Email,
-                    taskItem.User.PasswordHash,
                     taskItem.User.CreatedAt));
 
             return Ok(taskItemDto);

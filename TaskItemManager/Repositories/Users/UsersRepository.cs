@@ -35,7 +35,6 @@ public class UsersRepository(TaskItemsDbContext dbContext, IConfiguration config
                         user.Id,
                         user.UserName,
                         user.Email,
-                        user.PasswordHash,
                         user.CreatedAt,
                         user.TaskItems.ToList());
                     usersDictionary.Add(user.Id, userEntry);

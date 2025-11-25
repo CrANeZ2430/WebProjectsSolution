@@ -18,11 +18,5 @@ public class CreateUserRequestValidator : AbstractValidator<CreateUserRequest>
             .WithMessage(u => $"{nameof(u.Email)} cannot be empty")
             .MaximumLength(50)
             .WithMessage(u => $"{nameof(u.Email)} cannot be more than 50 characters");
-
-        RuleFor(u => u.PasswordHash)
-            .NotEmpty()
-            .WithMessage(u => $"{nameof(u.PasswordHash)} cannot be empty")
-            .MaximumLength(30)
-            .WithMessage(u => $"{nameof(u.PasswordHash)} cannot be more than 30 characters");
     }
 }

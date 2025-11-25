@@ -1,6 +1,4 @@
 ﻿using FluentValidation;
-using System.ComponentModel.DataAnnotations;
-using System.Threading;
 using TaskItemManager.Models.TaskItems.Models;
 using TaskItemManager.Models.Users.Validation;
 using TaskItemManager.Requests.Users;
@@ -15,27 +13,23 @@ public class User
         Guid id,
         string userName,
         string email,
-        string passwordHash,
         DateTime createdAt,
         List<TaskItem> taskItems)
     {
         Id = id;
         UserName = userName;
         Email = email;
-        PasswordHash = passwordHash;
         CreatedAt = createdAt;
         _taskItems = taskItems;
     }
 
     private User(
         string userName,
-        string email,
-        string passwordHash)
+        string email)
     {
         Id = Guid.NewGuid();
         UserName = userName;
         Email = email;
-        PasswordHash = passwordHash;
         CreatedAt = DateTime.UtcNow;
     }
 
@@ -43,7 +37,6 @@ public class User
     public Guid Id { get; private set; }
     public string UserName { get; private set; }
     public string Email { get; private set; }
-    public string PasswordHash { get; private set; }
     public DateTime CreatedAt { get; private set; }
     public ICollection<TaskItem> TaskItems => _taskItems;
 
@@ -56,15 +49,13 @@ public class User
 
         return new User(
             request.UserName,
-            request.Email,
-            request.PasswordHash);
+            request.Email);
     }
 
     public static User Create(
         Guid id,
         string userName,
         string email,
-        string passwordHash,
         DateTime createdAt,
         List<TaskItem> taskItems)
     {
@@ -72,7 +63,6 @@ public class User
             id,
             userName,
             email,
-            passwordHash,
             createdAt,
             taskItems);
     }
@@ -86,6 +76,5 @@ public class User
 
         UserName = request.UserName;
         Email = request.Email;
-        PasswordHash = request.PasswordHash;
     }
 }

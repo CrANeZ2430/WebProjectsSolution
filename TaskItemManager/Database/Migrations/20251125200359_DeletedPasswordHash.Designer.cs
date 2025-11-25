@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using TaskItemManager.Database;
@@ -11,9 +12,11 @@ using TaskItemManager.Database;
 namespace TaskItemManager.Database.Migrations
 {
     [DbContext(typeof(TaskItemsDbContext))]
-    partial class TaskItemsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251125200359_DeletedPasswordHash")]
+    partial class DeletedPasswordHash
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

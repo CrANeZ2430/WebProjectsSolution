@@ -4,7 +4,6 @@ public record UserDto(
     Guid Id,
     string UserName,
     string Email,
-    string PasswordHash,
     DateTime CreatedAt,
     IEnumerable<TaskItemSummaryDto> TaskItems,
     int TaskItemCount);

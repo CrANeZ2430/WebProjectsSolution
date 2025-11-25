@@ -30,7 +30,6 @@ namespace TaskItemManager.Controllers.Users
                 u.Id,
                 u.UserName,
                 u.Email,
-                u.PasswordHash,
                 u.CreatedAt,
                 u.TaskItems.Select(t => new TaskItemSummaryDto(
                     t.Id,
@@ -58,7 +57,6 @@ namespace TaskItemManager.Controllers.Users
                 user.Id,
                 user.UserName,
                 user.Email,
-                user.PasswordHash,
                 user.CreatedAt,
                 user.TaskItems.Select(t => new TaskItemSummaryDto(
                     t.Id,
@@ -90,7 +88,6 @@ namespace TaskItemManager.Controllers.Users
                     user.Id,
                     user.UserName,
                     user.Email,
-                    user.PasswordHash,
                     user.CreatedAt));
         }
 

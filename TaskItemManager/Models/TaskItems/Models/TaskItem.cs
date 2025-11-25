@@ -1,8 +1,4 @@
 ﻿using FluentValidation;
-using FluentValidation.Results;
-using System.ComponentModel.DataAnnotations;
-using System.Threading;
-using System.Threading.Tasks;
 using TaskItemManager.Models.TaskItems.Validation;
 using TaskItemManager.Models.Users.Models;
 using TaskItemManager.Repositories.Users;
