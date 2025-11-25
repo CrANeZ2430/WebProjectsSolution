@@ -19,9 +19,9 @@ namespace TaskItemManager.Controllers.Users
     {
         [Authorize]
         [HttpGet]
-        //[ProducesResponseType(typeof(PageResponse<IEnumerable<UserDto>>), StatusCodes.Status200OK)]
-        //[ProducesResponseType(StatusCodes.Status400BadRequest)]
-        //[ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(typeof(PageResponse<IEnumerable<UserDto>>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> GetUsers(
             CancellationToken cancellationToken = default)
         {
@@ -46,9 +46,9 @@ namespace TaskItemManager.Controllers.Users
 
         [Authorize]
         [HttpGet("{userId}")]
-        //[ProducesResponseType(typeof(UserDto), StatusCodes.Status200OK)]
-        //[ProducesResponseType(StatusCodes.Status400BadRequest)]
-        //[ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(typeof(UserDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetUserById(
             [FromRoute] Guid userId,
             CancellationToken cancellationToken = default)
@@ -72,9 +72,9 @@ namespace TaskItemManager.Controllers.Users
 
         [Authorize]
         [HttpPost]
-        //[ProducesResponseType(typeof(UserCreatedResponse), StatusCodes.Status201Created)]
-        //[ProducesResponseType(StatusCodes.Status400BadRequest)]
-        //[ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(typeof(UserCreatedResponse), StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> CreateUser(
             [FromBody] CreateUserRequest query,
             CancellationToken cancellationToken = default)
@@ -96,9 +96,9 @@ namespace TaskItemManager.Controllers.Users
 
         [Authorize]
         [HttpPut("{userId}")]
-        //[ProducesResponseType(StatusCodes.Status204NoContent)]
-        //[ProducesResponseType(StatusCodes.Status400BadRequest)]
-        //[ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
         public async Task<IActionResult> UpdateUser(
             [FromRoute] Guid userId,
             [FromBody] UpdateUserRequest query,
@@ -114,9 +114,9 @@ namespace TaskItemManager.Controllers.Users
 
         [Authorize]
         [HttpDelete("{userId}")]
-        //[ProducesResponseType(StatusCodes.Status204NoContent)]
-        //[ProducesResponseType(StatusCodes.Status400BadRequest)]
-        //[ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
         public async Task<IActionResult> DeleteUser(
             [FromRoute] Guid userId,
             CancellationToken cancellationToken = default)

@@ -26,7 +26,7 @@ builder.Services.AddSwaggerGen(options =>
         Scheme = "Bearer",
         BearerFormat = "JWT",
         In = ParameterLocation.Header,
-        Description = "Enter 'Bearer' [space] and then your JWT token."
+        Description = "Enter your JWT token."
     });
 
     // Apply security to all operations
