@@ -3,5 +3,7 @@
     public record UpdateTaskItemRequest(
         string Title,
         string Description,
-        bool IsCompleted);
+        bool IsCompleted,
+        DateTime StartedAt,
+        DateTime DoneAt);
 }

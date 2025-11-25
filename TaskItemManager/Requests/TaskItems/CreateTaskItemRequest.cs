@@ -4,5 +4,7 @@
         string Title,
         string Description,
         bool IsCompleted,
+        DateTime StartedAt,
+        DateTime DoneAt,
         Guid UserId);
 }

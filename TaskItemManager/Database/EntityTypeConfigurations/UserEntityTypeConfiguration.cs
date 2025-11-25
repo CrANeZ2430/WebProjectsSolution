@@ -18,7 +18,8 @@ public class UserEntityTypeConfiguration : IEntityTypeConfiguration<User>
             .IsRequired()
             .HasMaxLength(50);
 
-        builder.Property(x => x.CreatedAt);
+        builder.Property(x => x.CreatedAt)
+            .IsRequired();
 
         builder.HasMany(u => u.TaskItems)
             .WithOne(ti => ti.User);

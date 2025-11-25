@@ -5,4 +5,6 @@ public record TaskItemDto(
     string Title,
     string Description,
     bool IsCompleted,
+    DateTime StartedAt,
+    DateTime DoneAt,
     UserSummaryDto user);

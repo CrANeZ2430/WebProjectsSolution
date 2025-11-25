@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TaskItemManager.Controllers.Dtos;
 using TaskItemManager.Controllers.TaskItems.Dtos;
@@ -33,6 +32,8 @@ namespace TaskItemManager.Controllers.TaskItems
                 t.Title,
                 t.Description,
                 t.IsCompleted,
+                t.StartedAt,
+                t.DoneAt,
                 new UserSummaryDto(
                     t.User.Id,
                     t.User.UserName,
@@ -59,6 +60,8 @@ namespace TaskItemManager.Controllers.TaskItems
                 taskItem.Title,
                 taskItem.Description,
                 taskItem.IsCompleted,
+                taskItem.StartedAt,
+                taskItem.DoneAt,
                 new UserSummaryDto(
                     taskItem.User.Id,
                     taskItem.User.UserName,
@@ -123,7 +126,9 @@ namespace TaskItemManager.Controllers.TaskItems
             await taskItem.Update(new UpdateTaskItemRequest(
                 taskItem.Title,
                 taskItem.Description,
-                true));
+                true,
+                taskItem.StartedAt,
+                taskItem.DoneAt));
             taskItemsRepository.UpdateTaskItem(taskItem);
             await unitOfWorkRepository.SaveChangesAsync(cancellationToken);
 

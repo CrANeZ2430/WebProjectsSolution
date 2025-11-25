@@ -21,6 +21,14 @@ public class TaskItemEntityTypeConfiguration : IEntityTypeConfiguration<TaskItem
         builder.Property(x => x.IsCompleted)
             .HasDefaultValue(false);
 
+        builder.Property(x => x.StartedAt)
+            .IsRequired()
+            .HasDefaultValue(DateTime.UtcNow);
+
+        builder.Property(x => x.DoneAt)
+            .IsRequired()
+            .HasDefaultValue(DateTime.UtcNow);
+
         builder.Property(x => x.UserId)
             .IsRequired();
 

@@ -35,7 +35,9 @@ namespace TaskItemManager.Controllers.Users
                     t.Id,
                     t.Title,
                     t.Description,
-                    t.IsCompleted)),
+                    t.IsCompleted,
+                    t.StartedAt,
+                    t.DoneAt)),
                 u.TaskItems.Count()));
 
             return Ok(new PageResponse<IEnumerable<UserDto>>(
@@ -62,7 +64,9 @@ namespace TaskItemManager.Controllers.Users
                     t.Id,
                     t.Title,
                     t.Description,
-                    t.IsCompleted)),
+                    t.IsCompleted,
+                    t.StartedAt,
+                    t.DoneAt)),
                 user.TaskItems.Count());
 
             return Ok(userDto);

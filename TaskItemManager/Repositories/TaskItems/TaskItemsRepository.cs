@@ -28,6 +28,8 @@ namespace TaskItemManager.Repositories.TaskItems
                     taskItem.Title,
                     taskItem.Description,
                     taskItem.IsCompleted,
+                    taskItem.StartedAt,
+                    taskItem.DoneAt,
                     taskItem.UserId,
                     user);
             });
@@ -55,6 +57,8 @@ namespace TaskItemManager.Repositories.TaskItems
                     taskItem.Title,
                     taskItem.Description,
                     taskItem.IsCompleted,
+                    taskItem.StartedAt,
+                    taskItem.DoneAt,
                     taskItem.UserId,
                     user);
             },

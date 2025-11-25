@@ -20,6 +20,24 @@ public class CreateTaskItemRequestValidator : AbstractValidator<CreateTaskItemRe
             .MaximumLength(200)
             .WithMessage(t => $"{nameof(t.Description)} cannot be more than 200 characters");
 
+        RuleFor(t => t.StartedAt)
+            .NotEmpty()
+            .WithMessage(t => $"{nameof(t.StartedAt)} cannot be empty")
+            .Must(startedAt =>
+                {
+                    return startedAt > DateTime.UtcNow;
+                })
+            .WithMessage(t => $"{nameof(t.StartedAt)} cannot be further than now");
+
+        RuleFor(t => t.DoneAt)
+            .NotEmpty()
+            .WithMessage(t => $"{nameof(t.DoneAt)} cannot be empty")
+            .Must(startedAt =>
+            {
+                return startedAt > DateTime.UtcNow;
+            })
+            .WithMessage(t => $"{nameof(t.DoneAt)} cannot be further than now");
+
         RuleFor(t => t.UserId)
             .MustAsync(async (userId, cancellationToken) =>
             {

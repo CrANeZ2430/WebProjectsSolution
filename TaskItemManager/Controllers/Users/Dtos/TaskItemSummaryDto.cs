@@ -4,4 +4,6 @@ public record TaskItemSummaryDto(
     Guid Id,
     string Title,
     string Description,
-    bool IsCompleted);
+    bool IsCompleted,
+    DateTime StartedAt,
+    DateTime DoneAt);
