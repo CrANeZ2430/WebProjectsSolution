@@ -1,6 +1,7 @@
 ﻿using FluentValidation;
 using TaskItemManager.Models.TaskItems.Models;
 using TaskItemManager.Models.Users.Validation;
+using TaskItemManager.Repositories.Users;
 using TaskItemManager.Requests.Users;
 
 namespace TaskItemManager.Models.Users.Models;
@@ -37,14 +38,15 @@ public class User
     public Guid Id { get; private set; }
     public string UserName { get; private set; }
     public string Email { get; private set; }
-    public DateTime CreatedAt { get; private set; }
+    public DateTime CreatedAt { get; init; }
     public ICollection<TaskItem> TaskItems => _taskItems;
 
     public static async Task<User> Create(
-        CreateUserRequest request, 
+        CreateUserRequest request,
+        IUsersRepository usersRepository,
         CancellationToken cancellationToken = default)
     {
-        var validator = new CreateUserRequestValidator();
+        var validator = new CreateUserRequestValidator(usersRepository);
         await validator.ValidateAndThrowAsync(request, cancellationToken);
 
         return new User(
@@ -69,9 +71,10 @@ public class User
 
     public async Task Update(
         UpdateUserRequest request,
+        IUsersRepository usersRepository,
         CancellationToken cancellationToken = default)
     {
-        var validator = new UpdateUserRequestValidator();
+        var validator = new UpdateUserRequestValidator(usersRepository);
         await validator.ValidateAndThrowAsync(request, cancellationToken);
 
         UserName = request.UserName;

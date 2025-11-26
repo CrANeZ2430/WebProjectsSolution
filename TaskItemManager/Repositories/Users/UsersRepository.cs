@@ -10,6 +10,8 @@ namespace TaskItemManager.Repositories.Users;
 
 public class UsersRepository(TaskItemsDbContext dbContext, IConfiguration configuration) : IUsersRepository
 {
+    private static string _taskItemsDb = "TaskItemsDb";
+
     public async Task<List<User>> GetUsers(CancellationToken cancellationToken = default)
     {
         //return await dbContext.Users
@@ -17,7 +19,7 @@ public class UsersRepository(TaskItemsDbContext dbContext, IConfiguration config
         //    .AsNoTracking()
         //    .ToListAsync(cancellationToken);
 
-        using var connection = new NpgsqlConnection(configuration.GetConnectionString("TaskItemsDb"));
+        using var connection = new NpgsqlConnection(configuration.GetConnectionString(_taskItemsDb));
 
         var usersDictionary = new Dictionary<Guid, User>();
         var sqlQuery = @"select * from ""taskItems"".""Users"" u 
@@ -56,10 +58,10 @@ public class UsersRepository(TaskItemsDbContext dbContext, IConfiguration config
         //    .AsNoTracking()
         //    .SingleOrDefaultAsync(x => x.Id == userId);
 
-        using var connection = new NpgsqlConnection(configuration.GetConnectionString("TaskItemsDb"));
+        using var connection = new NpgsqlConnection(configuration.GetConnectionString(_taskItemsDb));
 
         User returnUser = null; 
-        var sqlQuery = $@"select * from ""taskItems"".""Users"" u 
+        var sqlQuery = @"select * from ""taskItems"".""Users"" u 
                         left join ""taskItems"".""TaskItems"" t 
                         on t.""UserId"" = u.""Id"" where u.""Id"" = @UserId 
                         order by u.""Id""";
@@ -85,15 +87,6 @@ public class UsersRepository(TaskItemsDbContext dbContext, IConfiguration config
         return returnUser ?? throw new NotFoundException($"{nameof(User)} cannot found");
     }
 
-    public async Task<bool> UserExists(Guid userId, CancellationToken cancellationToken = default)
-    {
-        using var connection = new NpgsqlConnection(configuration.GetConnectionString("TaskItemsDb"));
-        var sqlQuery = $@"select 1 from ""taskItems"".""Users"" u 
-                        where u.""Id"" = @UserId
-                        limit 1";
-
-        return await connection.ExecuteScalarAsync<bool>(sqlQuery, new { UserId = userId });
-    }
 
     public async Task AddUser(User user, CancellationToken cancellationToken = default)
     {
@@ -108,5 +101,25 @@ public class UsersRepository(TaskItemsDbContext dbContext, IConfiguration config
     public void DeleteUser(User user)
     {
         dbContext.Remove(user);
+    }
+
+    public async Task<bool> UserExists(Guid userId, CancellationToken cancellationToken = default)
+    {
+        using var connection = new NpgsqlConnection(configuration.GetConnectionString(_taskItemsDb));
+        var sqlQuery = @"select 1 from ""taskItems"".""Users"" u 
+                        where u.""Id"" = @UserId
+                        limit 1";
+
+        return await connection.ExecuteScalarAsync<bool>(sqlQuery, new { UserId = userId });
+    }
+
+    public async Task<bool> EmailExists(string email, CancellationToken cancellationToken = default)
+    {
+        using var connection = new NpgsqlConnection(configuration.GetConnectionString(_taskItemsDb));
+        var sqlQuery = @"select ""Email"" from ""taskItems"".""Users"" u
+                        where u.""Email"" == @Email
+                        limit 1";
+
+        return await connection.ExecuteScalarAsync<bool>(sqlQuery, new { Email = email });
     }
 }

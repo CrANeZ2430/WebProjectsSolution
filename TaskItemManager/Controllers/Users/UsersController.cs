@@ -81,7 +81,7 @@ namespace TaskItemManager.Controllers.Users
             [FromBody] CreateUserRequest query,
             CancellationToken cancellationToken = default)
         {
-            var user = await AppUser.Create(query, cancellationToken);
+            var user = await AppUser.Create(query, usersRepository, cancellationToken);
             await usersRepository.AddUser(user, cancellationToken);
             await unitOfWorkRepository.SaveChangesAsync(cancellationToken);
 
@@ -106,7 +106,7 @@ namespace TaskItemManager.Controllers.Users
             CancellationToken cancellationToken = default)
         {
             var user = await usersRepository.GetUserById(userId, cancellationToken);
-            await user.Update(query, cancellationToken);
+            await user.Update(query, usersRepository, cancellationToken);
             usersRepository.UpdateUser(user);
             await unitOfWorkRepository.SaveChangesAsync(cancellationToken);
 
