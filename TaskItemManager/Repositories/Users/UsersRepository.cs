@@ -117,9 +117,11 @@ public class UsersRepository(TaskItemsDbContext dbContext, IConfiguration config
     {
         using var connection = new NpgsqlConnection(configuration.GetConnectionString(_taskItemsDb));
         var sqlQuery = @"select ""Email"" from ""taskItems"".""Users"" u
-                        where u.""Email"" == @Email
+                        where u.""Email"" = '@Email'
                         limit 1";
 
-        return await connection.ExecuteScalarAsync<bool>(sqlQuery, new { Email = email });
+        var d = await connection.ExecuteScalarAsync<bool>(sqlQuery, new { Email = email });
+
+        return d;
     }
 }
