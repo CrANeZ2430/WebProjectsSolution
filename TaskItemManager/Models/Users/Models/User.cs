@@ -1,5 +1,7 @@
 ﻿using FluentValidation;
+using TaskItemManager.Models.TaskItems.Checkers;
 using TaskItemManager.Models.TaskItems.Models;
+using TaskItemManager.Models.Users.Checkers;
 using TaskItemManager.Models.Users.Validation;
 using TaskItemManager.Repositories.Users;
 using TaskItemManager.Requests.Users;
@@ -43,10 +45,10 @@ public class User
 
     public static async Task<User> Create(
         CreateUserRequest request,
-        IUsersRepository usersRepository,
+        IEmailUniqueChecker emailUniqueChecker,
         CancellationToken cancellationToken = default)
     {
-        var validator = new CreateUserRequestValidator(usersRepository);
+        var validator = new CreateUserRequestValidator(emailUniqueChecker);
         await validator.ValidateAndThrowAsync(request, cancellationToken);
 
         return new User(
@@ -71,10 +73,10 @@ public class User
 
     public async Task Update(
         UpdateUserRequest request,
-        IUsersRepository usersRepository,
+        IEmailUniqueChecker emailUniqueChecker,
         CancellationToken cancellationToken = default)
     {
-        var validator = new UpdateUserRequestValidator(usersRepository);
+        var validator = new UpdateUserRequestValidator(emailUniqueChecker);
         await validator.ValidateAndThrowAsync(request, cancellationToken);
 
         UserName = request.UserName;

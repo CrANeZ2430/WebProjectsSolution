@@ -6,6 +6,7 @@ using TaskItemManager.Conventions;
 using TaskItemManager.Database;
 using TaskItemManager.ExceptionHandling;
 using TaskItemManager.ExceptionHandling.Exceptions;
+using TaskItemManager.Models;
 using TaskItemManager.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -68,6 +69,7 @@ builder.Services.AddAuthorization();
 
 builder.Services.RegisterExceptionHandling();
 builder.Services.RegisterRepositories();
+builder.Services.RegisterCheckers();
 
 builder.Services.AddDbContext<TaskItemsDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("TaskItemsDb")));

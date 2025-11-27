@@ -1,12 +1,12 @@
 ﻿using FluentValidation;
-using TaskItemManager.Repositories.Users;
+using TaskItemManager.Models.TaskItems.Checkers;
 using TaskItemManager.Requests.TaskItems;
 
 namespace TaskItemManager.Models.TaskItems.Validation;
 
 public class CreateTaskItemRequestValidator : AbstractValidator<CreateTaskItemRequest>
 {
-    public CreateTaskItemRequestValidator(IUsersRepository usersRepository)
+    public CreateTaskItemRequestValidator(IUserExistsChecker userExistsChecker)
     {
         RuleFor(t => t.Title)
             .NotEmpty()
@@ -43,7 +43,7 @@ public class CreateTaskItemRequestValidator : AbstractValidator<CreateTaskItemRe
         RuleFor(t => t.UserId)
             .MustAsync(async (userId, cancellationToken) =>
             {
-                return await usersRepository.UserExists(userId, cancellationToken);
+                return await userExistsChecker.Exists(userId);
             })
             .WithMessage(t => $"{nameof(t.UserId)} shall be the id of the valid user");
     }

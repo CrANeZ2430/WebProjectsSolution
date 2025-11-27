@@ -7,12 +7,14 @@ using TaskItemManager.Repositories.Users;
 using TaskItemManager.Controllers.Users.Dtos;
 using TaskItemManager.Controllers.Dtos;
 using Microsoft.AspNetCore.Authorization;
+using TaskItemManager.Models.Users.Checkers;
 
 namespace TaskItemManager.Controllers.Users
 {
     [Route("api/[controller]")]
     [ApiController]
     public class UsersController(
+        IEmailUniqueChecker emailUniqueChecker,
         IUsersRepository usersRepository,
         IUnitOfWorkRepository unitOfWorkRepository) 
         : ControllerBase
@@ -81,7 +83,7 @@ namespace TaskItemManager.Controllers.Users
             [FromBody] CreateUserRequest query,
             CancellationToken cancellationToken = default)
         {
-            var user = await AppUser.Create(query, usersRepository, cancellationToken);
+            var user = await AppUser.Create(query, emailUniqueChecker, cancellationToken);
             await usersRepository.AddUser(user, cancellationToken);
             await unitOfWorkRepository.SaveChangesAsync(cancellationToken);
 
@@ -106,7 +108,7 @@ namespace TaskItemManager.Controllers.Users
             CancellationToken cancellationToken = default)
         {
             var user = await usersRepository.GetUserById(userId, cancellationToken);
-            await user.Update(query, usersRepository, cancellationToken);
+            await user.Update(query, emailUniqueChecker, cancellationToken);
             usersRepository.UpdateUser(user);
             await unitOfWorkRepository.SaveChangesAsync(cancellationToken);
 

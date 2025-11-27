@@ -103,25 +103,25 @@ public class UsersRepository(TaskItemsDbContext dbContext, IConfiguration config
         dbContext.Remove(user);
     }
 
-    public async Task<bool> UserExists(Guid userId, CancellationToken cancellationToken = default)
-    {
-        using var connection = new NpgsqlConnection(configuration.GetConnectionString(_taskItemsDb));
-        var sqlQuery = @"select 1 from ""taskItems"".""Users"" u 
-                        where u.""Id"" = @UserId
-                        limit 1";
+    //public async Task<bool> UserExists(Guid userId, CancellationToken cancellationToken = default)
+    //{
+    //    using var connection = new NpgsqlConnection(configuration.GetConnectionString(_taskItemsDb));
+    //    var sqlQuery = @"select 1 from ""taskItems"".""Users"" u 
+    //                    where u.""Id"" = @UserId
+    //                    limit 1";
 
-        return await connection.ExecuteScalarAsync<bool>(sqlQuery, new { UserId = userId });
-    }
+    //    return await connection.ExecuteScalarAsync<bool>(sqlQuery, new { UserId = userId });
+    //}
 
-    public async Task<bool> EmailExists(string email, CancellationToken cancellationToken = default)
-    {
-        using var connection = new NpgsqlConnection(configuration.GetConnectionString(_taskItemsDb));
-        var sqlQuery = @"select ""Email"" from ""taskItems"".""Users"" u
-                        where u.""Email"" = '@Email'
-                        limit 1";
+    //public async Task<bool> EmailExists(string email, CancellationToken cancellationToken = default)
+    //{
+    //    using var connection = new NpgsqlConnection(configuration.GetConnectionString(_taskItemsDb));
+    //    var sqlQuery = @"select ""Email"" from ""taskItems"".""Users"" u
+    //                    where u.""Email"" = '@Email'
+    //                    limit 1";
 
-        var d = await connection.ExecuteScalarAsync<bool>(sqlQuery, new { Email = email });
+    //    var d = await connection.ExecuteScalarAsync<bool>(sqlQuery, new { Email = email });
 
-        return d;
-    }
+    //    return d;
+    //}
 }

@@ -10,6 +10,4 @@ public interface IUsersRepository
     Task AddUser(User user, CancellationToken cancellationToken = default);
     void UpdateUser(User user);
     void DeleteUser(User user);
-    Task<bool> UserExists(Guid userId, CancellationToken cancellationToken = default);
-    Task<bool> EmailExists(string email, CancellationToken cancellationToken = default);
 }

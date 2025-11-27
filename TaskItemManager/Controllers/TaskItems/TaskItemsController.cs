@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using TaskItemManager.Controllers.Dtos;
 using TaskItemManager.Controllers.TaskItems.Dtos;
+using TaskItemManager.Models.TaskItems.Checkers;
 using TaskItemManager.Models.TaskItems.Models;
 using TaskItemManager.Repositories.TaskItems;
 using TaskItemManager.Repositories.UnitOfWork;
@@ -13,8 +14,8 @@ namespace TaskItemManager.Controllers.TaskItems
     [Route("api/[controller]")]
     [ApiController]
     public class TaskItemsController(
+        IUserExistsChecker userExistsChecker,
         ITaskItemsRepository taskItemsRepository,
-        IUsersRepository usersRepository,
         IUnitOfWorkRepository unitOfWorkRepository)
         : ControllerBase
     {
@@ -80,7 +81,7 @@ namespace TaskItemManager.Controllers.TaskItems
             [FromBody] CreateTaskItemRequest query,
             CancellationToken cancellationToken = default)
         {
-            var taskItem = await TaskItem.Create(query, usersRepository, cancellationToken);
+            var taskItem = await TaskItem.Create(query, userExistsChecker, cancellationToken);
             await taskItemsRepository.AddTaskItem(taskItem, cancellationToken);
             await unitOfWorkRepository.SaveChangesAsync(cancellationToken);
 

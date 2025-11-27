@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using TaskItemManager.Models.TaskItems.Checkers;
 using TaskItemManager.Models.TaskItems.Validation;
 using TaskItemManager.Models.Users.Models;
 using TaskItemManager.Repositories.Users;
@@ -59,10 +60,10 @@ public class TaskItem
 
     public static async Task<TaskItem> Create(
         CreateTaskItemRequest request,
-        IUsersRepository usersRepository,
+        IUserExistsChecker userExistsChecker,
         CancellationToken cancellationToken = default)
     {
-        var validator = new CreateTaskItemRequestValidator(usersRepository);
+        var validator = new CreateTaskItemRequestValidator(userExistsChecker);
         await validator.ValidateAndThrowAsync(request, cancellationToken);
 
         return new TaskItem(
