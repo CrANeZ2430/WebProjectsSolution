@@ -6,7 +6,7 @@ namespace TaskItemManager.ExceptionHandling.Mapper;
 
 public class ExceptionMapper : IExceptionMapper
 {
-    public Microsoft.AspNetCore.Mvc.ProblemDetails MapException(
+    public ProblemDetails MapException(
         HttpContext httpContext,
         Exception exception)
     {
@@ -44,7 +44,7 @@ public class ExceptionMapper : IExceptionMapper
 
         httpContext.Response.StatusCode = statusCode;
 
-        var problemDetails = new Microsoft.AspNetCore.Mvc.ProblemDetails
+        var problemDetails = new ProblemDetails
         {
             Type = exception.GetType().Name,
             Status = statusCode,

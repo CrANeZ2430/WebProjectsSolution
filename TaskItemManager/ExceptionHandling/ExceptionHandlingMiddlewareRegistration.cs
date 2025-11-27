@@ -1,8 +1,6 @@
-﻿using Microsoft.AspNetCore.Http.Features;
-using System.Diagnostics;
-using TaskItemManager.ExceptionHandling.Handlers;
+﻿using TaskItemManager.ExceptionHandling.Handlers;
 using TaskItemManager.ExceptionHandling.Mapper;
-using TaskItemManager.ExceptionHandling.ProblemDetails;
+using TaskItemManager.ExceptionHandling.ProblemDetailsService;
 namespace TaskItemManager.ExceptionHandling;
 
 public static class ExceptionHandlingMiddlewareRegistration
@@ -11,7 +9,7 @@ public static class ExceptionHandlingMiddlewareRegistration
     {
         serviceCollection.AddExceptionHandler<CustomExceptionHandler>();
         serviceCollection.AddSingleton<IExceptionMapper, ExceptionMapper>();
-        serviceCollection.AddSingleton<IProblemDetailsService, ProblemDetailsService>();
+        serviceCollection.AddSingleton<IProblemDetailsService, ProblemDetailsWriter>();
         //serviceCollection.AddProblemDetails(options =>
         //{
         //    options.CustomizeProblemDetails = context =>

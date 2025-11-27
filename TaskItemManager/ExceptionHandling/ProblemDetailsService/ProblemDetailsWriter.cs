@@ -1,12 +1,11 @@
-﻿
-using Microsoft.AspNetCore.Http.Features;
+﻿using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using System.Text.Json;
 
-namespace TaskItemManager.ExceptionHandling.ProblemDetails;
+namespace TaskItemManager.ExceptionHandling.ProblemDetailsService;
 
-public class ProblemDetailsService : IProblemDetailsService
+public class ProblemDetailsWriter : IProblemDetailsService
 {
     public async ValueTask WriteAsync(ProblemDetailsContext context)
     {
@@ -31,7 +30,7 @@ public class ProblemDetailsService : IProblemDetailsService
                     StringSplitOptions.TrimEntries));
 
         var options = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
-        await JsonSerializer.SerializeAsync(response.Body, context.ProblemDetails ?? new Microsoft.AspNetCore.Mvc.ProblemDetails
+        await JsonSerializer.SerializeAsync(response.Body, context.ProblemDetails ?? new ProblemDetails
         {
             Status = 500,
             Title = "Unknown error"
