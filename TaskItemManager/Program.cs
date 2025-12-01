@@ -6,6 +6,7 @@ using TaskItemManager.Conventions;
 using TaskItemManager.Database;
 using TaskItemManager.ExceptionHandling;
 using TaskItemManager.ExceptionHandling.Exceptions;
+using TaskItemManager.Extensions;
 using TaskItemManager.Models;
 using TaskItemManager.Repositories;
 
@@ -81,6 +82,7 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+    app.ApplyMigrations();
 }
 
 app.UseExceptionHandler();

@@ -1,0 +1,23 @@
+services:
+  taskitemmanager:
+    image: ${DOCKER_REGISTRY-}taskitemmanager
+    container_name: taskitems.api
+    build:
+      context: .
+      dockerfile: TaskItemManager/Dockerfile
+  taskitemmanager.database:
+    image: postgres:17
+    container_name: taskitems.database
+    environment:
+      - POSTGRES_DB=taskItemsDb
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=greOl8716
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+
+volumes:
+  pgdata:
+    
+     
