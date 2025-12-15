@@ -9,7 +9,7 @@ Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-co
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "unit_tests", "unit_tests", "{4933CD82-F418-4022-9973-D3546ECA587E}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{4933CD82-F418-4022-9973-D3546ECA587E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskItemManager.Validators.Tests", "..\TaskItemManager.Validators.Tests\TaskItemManager.Validators.Tests.csproj", "{1EEA5279-C116-40A2-8982-3668DCBBF509}"
 EndProject
