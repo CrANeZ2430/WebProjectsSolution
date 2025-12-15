@@ -3,7 +3,7 @@ using TaskItemManager.Database;
 
 namespace TaskItemManager.Models.Users.Checkers;
 
-public class EmailUniqueChekcer(TaskItemsDbContext dbContext) : IEmailUniqueChecker
+public class EmailUniqueChecker(TaskItemsDbContext dbContext) : IEmailUniqueChecker
 {
     public async Task<bool> IsUnique(string email, CancellationToken cancellationToken = default)
     {

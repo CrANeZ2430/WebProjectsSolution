@@ -7,7 +7,7 @@ public static class CheckersRegistration
 {
     public static void RegisterCheckers(this IServiceCollection serviceCollection)
     {
-        serviceCollection.AddScoped<IEmailUniqueChecker, EmailUniqueChekcer>();
+        serviceCollection.AddScoped<IEmailUniqueChecker, EmailUniqueChecker>();
         serviceCollection.AddScoped<IUserExistsChecker, UserExistsChecker>();
     }
 }
