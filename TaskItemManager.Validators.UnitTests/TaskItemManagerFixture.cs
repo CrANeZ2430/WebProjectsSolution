@@ -3,7 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using TaskItemManager.Database;
 using TaskItemManager.Models.Users.Checkers;
 
-namespace TaskItemManager.Validators.Tests;
+namespace TaskItemManager.Validators.UnitTests;
 
 public class TaskItemManagerFixture
 {

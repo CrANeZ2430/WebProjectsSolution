@@ -3,7 +3,7 @@ using TaskItemManager.Models.Users.Checkers;
 using TaskItemManager.Models.Users.Validation;
 using TaskItemManager.Requests.Users;
 
-namespace TaskItemManager.Validators.Tests;
+namespace TaskItemManager.Validators.UnitTests;
 
 public class CreateUserRequestValidator_UnitTest : IClassFixture<TaskItemManagerFixture>
 {
